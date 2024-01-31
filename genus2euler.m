@@ -125,13 +125,13 @@ function Normalize(f,p)
 end function;
 
 // Implementation of Algorithm 7 (main) in the paper as a Magma intrinsic
-intrinsic Genus2GoodEulerFactor(f::RngUPolElt[RngInt],p::RngIntElt:WhichCaseOnly:=false) -> RngUPolElt[RngInt], RngIntElt
+intrinsic Genus2AlmostGoodEulerFactor(f::RngUPolElt[RngInt],p::RngIntElt:WhichTypeOnly:=false) -> RngUPolElt[RngInt], RngIntElt
 { returns the Euler factor of the genus 2 curve C:y^2=f(x) at an odd prime of almost good reduction (bad for C but, good for Jac(C)). }
     require Degree(f) in [5,6]: "f should be a squarefree polynomial of degree 5 or 6"; // we don't verify that f is squarefree
     if p eq 2 then return EulerFactor(HyperellipticCurve(f),p); end if; // revert to Magma for p=2
     f := Normalize(f,p);
     n := WhichType(f,p);
-    if WhichCaseOnly then return n; end if;
+    if WhichTypeOnly then return n; end if;
     if n eq 1 then return Type1(f,p);
     elif n eq 2 then return Type2a(f,p);   // we use 2 to indicate 2a
     elif n eq 3 then return Type2b(f,p);   // we use 3 to indicate 2b
@@ -142,28 +142,28 @@ end intrinsic;
 
 // The intrinsics below provide polymorphic interfaces to the Genus2GoodEulerFactor intrinsic above
 
-intrinsic Genus2GoodEulerFactor(f::RngUPolElt[FldRat],p::RngIntElt:WhichCaseOnly:=false) -> RngUPolElt[RngInt], RngIntElt
+intrinsic Genus2AlmostGoodEulerFactor(f::RngUPolElt[FldRat],p::RngIntElt:WhichTypeOnly:=false) -> RngUPolElt[RngInt], RngIntElt
 { returns the Euler factor of the genus 2 curve C:y^2=f(x) at an odd prime of almost good reduction (bad for C but, good for Jac(C)). }
-    return Genus2GoodEulerFactor(ChangeRing(f,Integers()),p:WhichCaseOnly:=WhichCaseOnly);
+    return Genus2AlmostGoodEulerFactor(ChangeRing(f,Integers()),p:WhichTypeOnly:=WhichTypeOnly);
 end intrinsic;
 
-intrinsic Genus2GoodEulerFactor(f::SeqEnum[RngIntElt],p::RngIntElt:WhichCaseOnly:=false) -> RngUPolElt[RngInt], RngIntElt
+intrinsic Genus2AlmostGoodEulerFactor(f::SeqEnum[RngIntElt],p::RngIntElt:WhichTypeOnly:=false) -> RngUPolElt[RngInt], RngIntElt
 { returns the Euler factor of the genus 2 curve C:y^2=f(x) specified by coeffs(f) at an odd prime of almost good reduction (bad for C but, good for Jac(C)). }
-    return Genus2GoodEulerFactor(R!f,p:WhichCaseOnly:=WhichCaseOnly) where R:=PolynomialRing(Integers());
+    return Genus2AlmostGoodEulerFactor(R!f,p:WhichTypeOnly:=WhichTypeOnly) where R:=PolynomialRing(Integers());
 end intrinsic;
 
-intrinsic Genus2GoodEulerFactor(fh::SeqEnum[SeqEnum[RngIntElt]],p::RngIntElt:WhichCaseOnly:=false) -> RngUPolElt[RngInt], RngIntElt
+intrinsic Genus2AlmostGoodEulerFactor(fh::SeqEnum[SeqEnum[RngIntElt]],p::RngIntElt:WhichTypeOnly:=false) -> RngUPolElt[RngInt], RngIntElt
 { returns the Euler factor of the genus 2 curve C:y^2+h(x)y=f(x) specified by [coeffs(f),coeffs(h)] at an odd prime of almost good reduction (bad for C but, good for Jac(C)). }
     require #fh eq 2: "Expected a list of lists of coefficients [coeffs(f),coeffs(h)] for genus 2 curve y^2+h(x)y=f(x).";
-    return Genus2GoodEulerFactor((4*R!fh[1]+R!fh[2])^2,p:WhichCaseOnly:=WhichCaseOnly) where R:= PolynomialRing(Integers());
+    return Genus2AlmostGoodEulerFactor((4*R!fh[1]+R!fh[2])^2,p:WhichTypeOnly:=WhichTypeOnly) where R:= PolynomialRing(Integers());
 end intrinsic;
 
-intrinsic Genus2GoodEulerFactor(fh::SeqEnum[RngUPolElt],p::RngIntElt:WhichCaseOnly:=false) -> RngUPolElt[RngInt], RngIntElt
+intrinsic Genus2AlmostGoodEulerFactor(fh::SeqEnum[RngUPolElt],p::RngIntElt:WhichTypeOnly:=false) -> RngUPolElt[RngInt], RngIntElt
 { returns the Euler factor of the genus 2 curve C:y^2+h(x)y=f(x) specified by [f,h] at an odd prime of almost good reduction (bad for C but, good for Jac(C)). }
-    return Genus2GoodEulerFactor([Coefficients(f):f in fh],p:WhichCaseOnly:=WhichCaseOnly);
+    return Genus2AlmostGoodEulerFactor([Coefficients(f):f in fh],p:WhichTypeOnly:=WhichTypeOnly);
 end intrinsic;
 
-intrinsic Genus2GoodEulerFactor(C::CrvHyp,p::RngIntElt:WhichCaseOnly:=false) -> RngUPolElt[RngInt], RngIntElt
+intrinsic Genus2AlmostGoodEulerFactor(C::CrvHyp,p::RngIntElt:WhichTypeOnly:=false) -> RngUPolElt[RngInt], RngIntElt
 { returns the Euler factor of the genus 2 curve C at an odd prime of  almost good reduction (bad for C but, good for Jac(C)). }
-    return Genus2GoodEulerFactor([f,h],p:WhichCaseOnly:=WhichCaseOnly) where f,h := HyperellipticPolynomials(C);
+    return Genus2AlmostGoodEulerFactor([f,h],p:WhichTypeOnly:=WhichTypeOnly) where f,h := HyperellipticPolynomials(C);
 end intrinsic;
