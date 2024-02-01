@@ -8,7 +8,7 @@
 lpoly3 := func<f|LPolynomial(EllipticCurve(Evaluate(f,Parent(f).1/c)*c^2)) where c:=LeadingCoefficient(f)>;
 vc := func<g,p|v where v,_:=Valuation(LeadingCoefficient(g),p)>;
 irred := func<d,R|&cat[[R|f:cc in CartesianPower(F,i)|IsIrreducible(f) where f:=R!([c:c in TupleToList(cc)] cat [F|1])]:i in [1..d]] where F:=BaseRing(R)>;
-gcd := func<f,k|(Characteristic(BaseRing(R)) gt 5 select GCD([Derivative(f,i):i in [0..k-1]])
+gcd := func<f,k|(Degree(f) lt Characteristic(BaseRing(R)) select GCD([Derivative(f,i):i in [0..k-1]])
                 else &*[R|g^(Valuation(f,g)-k+1):g in irred(Degree(f) div k,R)|Valuation(f,g) ge k]) where R:=Parent(f)>;
 gcd3 := func<f|gcd(f,3)>;  gcd5 := func<f|gcd(f,5)>; gcd6 := func<f|gcd(f,6)>;
 
@@ -155,7 +155,7 @@ end intrinsic;
 intrinsic Genus2AlmostGoodEulerFactor(fh::SeqEnum[SeqEnum[RngIntElt]],p::RngIntElt:WhichTypeOnly:=false) -> RngUPolElt[RngInt], RngIntElt
 { returns the Euler factor of the genus 2 curve C:y^2+h(x)y=f(x) specified by [coeffs(f),coeffs(h)] at an odd prime of almost good reduction (bad for C but, good for Jac(C)). }
     require #fh eq 2: "Expected a list of lists of coefficients [coeffs(f),coeffs(h)] for genus 2 curve y^2+h(x)y=f(x).";
-    return Genus2AlmostGoodEulerFactor((4*R!fh[1]+R!fh[2])^2,p:WhichTypeOnly:=WhichTypeOnly) where R:= PolynomialRing(Integers());
+    return Genus2AlmostGoodEulerFactor(4*R!fh[1]+(R!fh[2])^2,p:WhichTypeOnly:=WhichTypeOnly) where R:= PolynomialRing(Integers());
 end intrinsic;
 
 intrinsic Genus2AlmostGoodEulerFactor(fh::SeqEnum[RngUPolElt],p::RngIntElt:WhichTypeOnly:=false) -> RngUPolElt[RngInt], RngIntElt
@@ -165,5 +165,5 @@ end intrinsic;
 
 intrinsic Genus2AlmostGoodEulerFactor(C::CrvHyp,p::RngIntElt:WhichTypeOnly:=false) -> RngUPolElt[RngInt], RngIntElt
 { returns the Euler factor of the genus 2 curve C at an odd prime of  almost good reduction (bad for C but, good for Jac(C)). }
-    return Genus2AlmostGoodEulerFactor([f,h],p:WhichTypeOnly:=WhichTypeOnly) where f,h := HyperellipticPolynomials(C);
+    return Genus2AlmostGoodEulerFactor([ChangeRing(f,Integers()),ChangeRing(h,Integers())],p:WhichTypeOnly:=WhichTypeOnly) where f,h := HyperellipticPolynomials(C);
 end intrinsic;
