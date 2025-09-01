@@ -64,7 +64,7 @@ function Type2b(f,p)
         gp := gcd3(fp); assert Degree(gp) eq 1;
         r := Klift(-Coefficient(gp,0));
     end while;
-    return Evaluate(L,T^2);
+    return R!Evaluate(L,T^2);
 end function;
 
 // Implementation of Algorithm 6 (type 4) in the paper
@@ -90,7 +90,7 @@ function Type4(f,p)
         gp := gcd3(fp); assert Degree(gp) eq 1;
         r := ZZ!-Coefficient(gp,0);
     end while;
-    return &*L;
+    return R!&*L;
 end function;
 
 // Implementation of Algorithm 2 (which type) in the paper
